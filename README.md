@@ -6,7 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 npm install -> npm start
 
 # Load Data
-Add json file to asset folder and change the path(data_URL) in map.component.ts
+Add json file to asset folder and change the path(data_URL) in map-box.component.ts
 
 
 
