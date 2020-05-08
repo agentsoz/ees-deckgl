@@ -1,6 +1,14 @@
 # DeckglAngular
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.2.
+
+# Run application 
+
+npm install -> npm start
+
+# Load Data
+Add json file to asset folder and change the path(data_URL) in map.component.ts
+
+
 
 ## Development server
 
