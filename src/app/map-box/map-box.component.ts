@@ -4,6 +4,7 @@ import { MapService } from '../map.service';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { MapboxLayer } from '@deck.gl/mapbox';
 import tripsFile from '../../assets/trips4.json'
+
 declare var deck: any;
 
 @Component({
@@ -17,6 +18,7 @@ export class MapBoxComponent implements OnInit {
   style = 'mapbox://styles/mapbox/dark-v10';
   public animationStart: any;
   public animationFinish: any;
+  public animationStartTime = -1
 
   lat = -36.98126943803695;
   lng = 144.07470499995938;
@@ -82,24 +84,33 @@ export class MapBoxComponent implements OnInit {
     let start = 47200
     let finish = 50400
 
+    if (this.animationStartTime == -1)//change this condition to true in first iteration
+    {
+      this.animationStartTime = Date.now()
+    }
     const loopLength = (finish - start) + 200;
-    const animationSpeed = 30;
-    const timestamp = Date.now() / 1000;
-    const loopTime = loopLength / animationSpeed;
+  
+    const animationSpeed = 30
+ 
+    const timestamp = ((Date.now() - this.animationStartTime) / 1000)
+    const loopTime = loopLength / animationSpeed
     var currentTime;
-    var before
-    if (((timestamp % loopTime) / loopTime) * loopLength < (start - 200) || (start - 200)) {
 
-      currentTime = ((timestamp % loopTime) / loopTime) * loopLength + (start - 200);
-    }
-    else {
-      currentTime = ((timestamp % loopTime) / loopTime) * loopLength;
-    }
-    console.log("currentTime maldon" + currentTime)
+    currentTime = ((timestamp % loopTime) / loopTime) * loopLength + start;
+    //console.log("currentTime maldon" + currentTime)
 
     this.tripsLayer.setProps({ currentTime });
     this.animationFrame = requestAnimationFrame(this.animateMaldonTest.bind(this));
 
+  }
+
+  async loadFile(){
+
+    this.animationStartTime = -1
+    this.map.removeLayer("trips")
+    await this.addLayer()
+    console.log("here")
+  
   }
 
 

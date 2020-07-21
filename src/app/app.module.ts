@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { MapBoxComponent } from './map-box/map-box.component';
 import {MapService} from './map.service';
 import { FileDropComponent } from './file-drop/file-drop.component'
-import { NgxFileDropModule } from 'ngx-file-drop';
+//import { NgxFileDropModule } from 'ngx-file-drop';
+import {ButtonModule} from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxFileDropModule
+    ButtonModule,
   ],
   providers: [MapService],
   bootstrap: [AppComponent]
