@@ -4,16 +4,20 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapBoxComponent } from './map-box/map-box.component';
-import {MapService} from './map.service'
+import {MapService} from './map.service';
+import { FileDropComponent } from './file-drop/file-drop.component'
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapBoxComponent
+    MapBoxComponent,
+    FileDropComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxFileDropModule
   ],
   providers: [MapService],
   bootstrap: [AppComponent]

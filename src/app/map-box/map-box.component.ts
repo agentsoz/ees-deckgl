@@ -3,6 +3,7 @@ import * as mapboxgl from 'mapbox-gl';
 import { MapService } from '../map.service';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { MapboxLayer } from '@deck.gl/mapbox';
+import tripsFile from '../../assets/trips4.json'
 declare var deck: any;
 
 @Component({
@@ -14,7 +15,8 @@ export class MapBoxComponent implements OnInit {
 
   map: mapboxgl.Map;
   style = 'mapbox://styles/mapbox/dark-v10';
-  
+  public animationStart: any;
+  public animationFinish: any;
 
   lat = -36.98126943803695;
   lng = 144.07470499995938;
@@ -32,6 +34,8 @@ export class MapBoxComponent implements OnInit {
     this.map.on('load', (event) => {
       this.addLayer()
     })
+
+    //console.log("trips"+ tripsFile)
   
   }
   private initializeMap(){
@@ -53,6 +57,9 @@ export class MapBoxComponent implements OnInit {
   {
     //replace this
     const trips = await './assets/trips4.json'
+
+
+    console.log("start+finish" + this.animationStart + ":"+ this.animationFinish )
     
     this.tripsLayer = new MapboxLayer({
     id: 'trips',
