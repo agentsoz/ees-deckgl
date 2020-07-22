@@ -3,8 +3,8 @@ import * as mapboxgl from 'mapbox-gl';
 import { MapService } from '../map.service';
 import { TripsLayer } from '@deck.gl/geo-layers';
 import { MapboxLayer } from '@deck.gl/mapbox';
-import tripsFile from '../../assets/trips4.json'
-
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 declare var deck: any;
 
 @Component({
@@ -16,9 +16,19 @@ export class MapBoxComponent implements OnInit {
 
   map: mapboxgl.Map;
   style = 'mapbox://styles/mapbox/dark-v10';
+
   public animationStart: any;
   public animationFinish: any;
   public animationStartTime = -1
+  public isPlaying = false
+  public simulationStatus: string = "Play"
+  public currentTime : any
+  public animationSpeed = 30
+  public Speed :number = this.animationSpeed
+  public stop = false
+
+  private _jsonURL = './assets/trips.json';
+  
 
   lat = -36.98126943803695;
   lng = 144.07470499995938;
@@ -27,7 +37,7 @@ export class MapBoxComponent implements OnInit {
 
   private animationFrame: number;
   
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService, private http: HttpClient) { }
 
   ngOnInit() {
  
@@ -36,8 +46,6 @@ export class MapBoxComponent implements OnInit {
     this.map.on('load', (event) => {
       this.addLayer()
     })
-
-    //console.log("trips"+ tripsFile)
   
   }
   private initializeMap(){
@@ -58,7 +66,13 @@ export class MapBoxComponent implements OnInit {
   private async addLayer()
   {
     //replace this
-    const trips = await './assets/trips4.json'
+    const trips = await this._jsonURL
+    
+    this.getJSON().subscribe(data => {
+      console.log("length"+ data.length);
+
+      this.animationStart = data[data.length-1].start
+      this.animationFinish = data[data.length-1].finish
 
 
     console.log("start+finish" + this.animationStart + ":"+ this.animationFinish )
@@ -74,43 +88,82 @@ export class MapBoxComponent implements OnInit {
     widthMinPixels: 2,
     rounded: true,
     trailLength: 80,
-    currentTime: 47800
+    currentTime: 0
     });
     this.map.addLayer(this.tripsLayer);
-    this.animateMaldonTest()
+   
+     });
+  
   }
   animateMaldonTest(): void {
     // Replace this
-    let start = 47200
-    let finish = 50400
-
     if (this.animationStartTime == -1)//change this condition to true in first iteration
     {
       this.animationStartTime = Date.now()
     }
-    const loopLength = (finish - start) + 200;
+    const loopLength = this.animationFinish - this.animationStart
   
-    const animationSpeed = 30
- 
     const timestamp = ((Date.now() - this.animationStartTime) / 1000)
-    const loopTime = loopLength / animationSpeed
+    const loopTime = loopLength / this.animationSpeed
     var currentTime;
 
-    currentTime = ((timestamp % loopTime) / loopTime) * loopLength + start;
+    this.currentTime = ((timestamp % loopTime) / loopTime) * loopLength + this.animationStart;
     //console.log("currentTime maldon" + currentTime)
 
+    currentTime = this.currentTime
+    if(!this.stop){
     this.tripsLayer.setProps({ currentTime });
     this.animationFrame = requestAnimationFrame(this.animateMaldonTest.bind(this));
+    }
 
+  }
+  stopAnimation(){
+
+    var temp = this.currentTime
+    var currentTime = temp
+
+    this.tripsLayer.setProps({ currentTime });
+    this.animationFrame = requestAnimationFrame(this.stopAnimation.bind(this));
   }
 
   async loadFile(){
 
+    await this.map.removeLayer("trips")
     this.animationStartTime = -1
-    this.map.removeLayer("trips")
+    
     await this.addLayer()
-    console.log("here")
   
+  }
+  public getJSON(): Observable<any> {
+    return this.http.get(this._jsonURL);
+  }
+
+  playSimulation() {
+  
+    if (this.isPlaying) {
+
+      this.isPlaying = false
+      this.stop = true
+      this.simulationStatus = "Play"
+      this.stopAnimation()
+      //console.log("here")
+
+    }
+    else {
+
+      this.isPlaying = true
+      this.stop = false
+      this.simulationStatus = "Pause"
+      this.animateMaldonTest()
+
+    }
+    // if(this.currentJob.animateMaldonTest())
+    
+
+  }
+  setAnimationSpeed(event) {
+
+    this.animationSpeed = this.Speed
   }
 
 

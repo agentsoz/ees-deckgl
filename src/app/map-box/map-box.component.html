@@ -1,2 +1,10 @@
 <div class="map" id="map" ></div>
 <button pButton type="button" class="ui-button-rounded ui-button-success load-button" (click)="loadFile()" label="Load File"></button>
+<div class="controllers">
+    <a title="Play" (click)="playSimulation()">
+    {{simulationStatus}} 
+    </a>
+    Animation speed
+    <p-inputNumber [(ngModel)]="this.Speed" [size]="2" [min]="0" [max]="100" (click)="setAnimationSpeed($event)"  [showButtons]="true"></p-inputNumber>
+    X
+</div>
