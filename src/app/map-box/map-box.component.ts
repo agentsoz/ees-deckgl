@@ -69,13 +69,13 @@ export class MapBoxComponent implements OnInit {
     const trips = await this._jsonURL
     
     this.getJSON().subscribe(data => {
-      console.log("length"+ data.length);
+      //console.log("length"+ data.length);
 
       this.animationStart = data[data.length-1].start
       this.animationFinish = data[data.length-1].finish
 
 
-    console.log("start+finish" + this.animationStart + ":"+ this.animationFinish )
+    //console.log("start+finish" + this.animationStart + ":"+ this.animationFinish )
     
     this.tripsLayer = new MapboxLayer({
     id: 'trips',
